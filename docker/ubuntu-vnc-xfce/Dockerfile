@@ -43,6 +43,8 @@ RUN apt-get update \
         git \
         wget \
         nano \
+        software-properties-common \
+    && add-apt-repository universe \
     && rm -rf /var/lib/apt/lists/*
 
 ### install current 'jq' explicitly
