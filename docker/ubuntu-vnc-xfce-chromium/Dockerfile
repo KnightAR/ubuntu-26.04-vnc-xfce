@@ -52,7 +52,7 @@ RUN echo "**** temp install packages ****" \
     && add-apt-repository universe \
     && apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y \
-        libnss-wrapper \
+        libnss-wrapper nss-wrapper \
     && apt-get -y autoremove \
     && rm -rf /var/lib/apt/lists/*
 
