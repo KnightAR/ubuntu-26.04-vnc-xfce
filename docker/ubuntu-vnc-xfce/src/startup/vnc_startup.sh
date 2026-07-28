@@ -97,8 +97,21 @@ echo "Starting noVNC"
 PID_SUB=$!
 
 echo "Starting VNC server ..."
+
+### TigerVNC 1.16+ renamed the classic 'vncserver' Perl wrapper to
+### 'tigervncserver'. The bare 'vncserver' shipped in the tarball is now the
+### raw server (Xtigervnc), which no longer accepts '-depth' and does not start
+### the desktop session. Prefer 'tigervncserver' when present, fall back to
+### 'vncserver' for older bases.
+if command -v tigervncserver >/dev/null 2>&1 ; then
+    VNCSERVER=tigervncserver
+else
+    VNCSERVER=vncserver
+fi
+echo "... using '${VNCSERVER}'"
+
 echo "... remove old VNC locks to be a reattachable container"
-vncserver -kill ${DISPLAY} &> "${STARTUPDIR}"/vnc_startup.log \
+${VNCSERVER} -kill ${DISPLAY} &> "${STARTUPDIR}"/vnc_startup.log \
     || rm -rfv /tmp/.X*-lock /tmp/.X11-unix &> "${STARTUPDIR}"/vnc_startup.log \
     || echo "... no locks present"
 
@@ -115,12 +128,16 @@ echo "... VNC params: VNC_BLACKLIST_TIMEOUT=${VNC_BLACKLIST_TIMEOUT}, VNC_BLACKL
 ### If 'vncserver' fails to start, dump the logs before exiting.
 ### Without this, 'set -e' aborts the script on failure and the tail below
 ### (which normally shows the logs) is never reached.
-if ! vncserver ${DISPLAY} -depth ${VNC_COL_DEPTH} -geometry ${VNC_RESOLUTION} \
+### NOTE: log to 'vnc_startup.log' (not 'no_vnc_startup.log'), otherwise the
+### background 'novnc_proxy' writing to the same file clobbers vncserver's
+### output and hides the real error.
+if ! ${VNCSERVER} ${DISPLAY} -depth ${VNC_COL_DEPTH} -geometry ${VNC_RESOLUTION} \
+    -localhost no \
     -BlacklistTimeout ${VNC_BLACKLIST_TIMEOUT} \
-    -BlacklistThreshold ${VNC_BLACKLIST_THRESHOLD} &> "${STARTUPDIR}"/no_vnc_startup.log ; then
-    echo "ERROR: 'vncserver' failed to start on display ${DISPLAY}. Dumping logs:"
-    echo "----- ${STARTUPDIR}/no_vnc_startup.log -----"
-    cat "${STARTUPDIR}"/no_vnc_startup.log 2>/dev/null
+    -BlacklistThreshold ${VNC_BLACKLIST_THRESHOLD} &> "${STARTUPDIR}"/vnc_startup.log ; then
+    echo "ERROR: '${VNCSERVER}' failed to start on display ${DISPLAY}. Dumping logs:"
+    echo "----- ${STARTUPDIR}/vnc_startup.log -----"
+    cat "${STARTUPDIR}"/vnc_startup.log 2>/dev/null
     echo "----- ${HOME}/.vnc/*${DISPLAY}.log -----"
     cat "${HOME}"/.vnc/*"${DISPLAY}".log 2>/dev/null
     exit 1
