@@ -102,6 +102,14 @@ vncserver -kill ${DISPLAY} &> "${STARTUPDIR}"/vnc_startup.log \
     || rm -rfv /tmp/.X*-lock /tmp/.X11-unix &> "${STARTUPDIR}"/vnc_startup.log \
     || echo "... no locks present"
 
+### Ensure the X11 socket directory exists with sticky permissions.
+### TigerVNC's Xvnc refuses to create '/tmp/.X11-unix' when running as a
+### non-root user (euid != 0), which is the case for the child images that
+### switch to '${VNC_USER}'. Recreating it here avoids the
+### '_XSERVTransmkdir: euid != 0 ... will not be created' error.
+mkdir -p /tmp/.X11-unix
+chmod 1777 /tmp/.X11-unix 2>/dev/null || true
+
 echo "... VNC params: VNC_COL_DEPTH=${VNC_COL_DEPTH}, VNC_RESOLUTION=${VNC_RESOLUTION}"
 echo "... VNC params: VNC_BLACKLIST_TIMEOUT=${VNC_BLACKLIST_TIMEOUT}, VNC_BLACKLIST_THRESHOLD=${VNC_BLACKLIST_THRESHOLD}"
 vncserver ${DISPLAY} -depth ${VNC_COL_DEPTH} -geometry ${VNC_RESOLUTION} \
