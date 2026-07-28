@@ -108,6 +108,8 @@ FROM stage-xfce as stage-vnc
 # RUN wget -qO- https://github.com/KnightAR/tigervnc/releases/download/v1.16.2-mirror/tigervnc-1.16.2.x86_64.tar.gz | tar xz --strip 1 -C /
 RUN wget -qO- https://sourceforge.net/projects/tigervnc/files/stable/1.16.2/tigervnc-1.16.2.x86_64.tar.gz | tar xz --strip 1 -C /
 
+RUN ln -s /usr/bin/x0vncserver /usr/bin/vncserver
+
 FROM stage-vnc as stage-novnc
 
 ### same parent path as VNC
