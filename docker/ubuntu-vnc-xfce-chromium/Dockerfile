@@ -51,7 +51,7 @@ RUN echo "**** install packages ****" \
 RUN echo "**** temp install packages ****" \
     && apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y \
-        libnss3 \
+        libnss-wrapper \
     && apt-get -y autoremove \
     && rm -rf /var/lib/apt/lists/*
 
