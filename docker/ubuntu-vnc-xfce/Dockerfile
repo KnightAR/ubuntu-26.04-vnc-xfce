@@ -16,7 +16,7 @@
 ### If '+ exit 1' then adjust the version sticker
 ### variables in script './hooks/env'
 
-ARG BASETAG=18.04
+ARG BASETAG=26.04
 
 FROM ubuntu:${BASETAG} as stage-ubuntu
 
@@ -24,11 +24,11 @@ ARG ARG_VCS_REF
 ARG ARG_VERSION_STICKER
 
 LABEL \
-    maintainer="https://github.com/accetto" \
-    vendor="accetto" \
+    maintainer="https://github.com/KnightAR" \
+    vendor="knightar" \
     version-sticker="${ARG_VERSION_STICKER}" \
     org.label-schema.vcs-ref="${ARG_VCS_REF}" \
-    org.label-schema.vcs-url="https://github.com/accetto/ubuntu-vnc-xfce"
+    org.label-schema.vcs-url="https://github.com/KnightAR/ubuntu-26.04-vnc-xfce"
 
 ### 'apt-get clean' runs automatically
 RUN apt-get update \
@@ -46,13 +46,15 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 ### install current 'jq' explicitly
+### 'jq' moved from 'stedolan/jq' to 'jqlang/jq'; the linux amd64 binary is now 'jq-linux-amd64'
+### and the checksums are published as a release asset ('sha256sum.txt')
 RUN \
     { \
-    JQ_VERSION="1.6" ; \
-    JQ_DISTRO="jq-linux64" ; \
+    JQ_VERSION="1.7.1" ; \
+    JQ_DISTRO="jq-linux-amd64" ; \
     cd /tmp ; \
-    wget -q "https://github.com/stedolan/jq/releases/download/jq-${JQ_VERSION}/${JQ_DISTRO}" ; \
-    wget -q "https://raw.githubusercontent.com/stedolan/jq/master/sig/v${JQ_VERSION}/sha256sum.txt" ; \
+    wget -q "https://github.com/jqlang/jq/releases/download/jq-${JQ_VERSION}/${JQ_DISTRO}" ; \
+    wget -q "https://github.com/jqlang/jq/releases/download/jq-${JQ_VERSION}/sha256sum.txt" ; \
     test=$(grep "${JQ_DISTRO}" sha256sum.txt | sha256sum -c | grep -c "${JQ_DISTRO}: OK") ; \
     if [[ $test -ne 1 ]] ; then \
         echo "FAILURE: ${JQ_DISTRO} failed checksum test" ; \
@@ -101,8 +103,8 @@ FROM stage-xfce as stage-vnc
 ### installed into '/usr/share/usr/local/share/vnc'
 ### Bintray has been deprecated and disabled since 2021-05-01 
 # RUN wget -qO- https://dl.bintray.com/tigervnc/stable/tigervnc-1.10.1.x86_64.tar.gz | tar xz --strip 1 -C /
-# RUN wget -qO- https://github.com/accetto/tigervnc/releases/download/v1.10.1-mirror/tigervnc-1.10.1.x86_64.tar.gz | tar xz --strip 1 -C /
-RUN wget -qO- https://sourceforge.net/projects/tigervnc/files/stable/1.10.1/tigervnc-1.10.1.x86_64.tar.gz | tar xz --strip 1 -C /
+# RUN wget -qO- https://github.com/KnightAR/tigervnc/releases/download/v1.16.2-mirror/tigervnc-1.16.2.x86_64.tar.gz | tar xz --strip 1 -C /
+RUN wget -qO- https://sourceforge.net/projects/tigervnc/files/stable/1.16.2/tigervnc-1.16.2.x86_64.tar.gz | tar xz --strip 1 -C /
 
 FROM stage-vnc as stage-novnc
 
@@ -110,16 +112,16 @@ FROM stage-vnc as stage-novnc
 ENV NO_VNC_HOME=/usr/share/usr/local/share/noVNCdim
 
 ### 'apt-get clean' runs automatically
-### 'python-numpy' used for websockify/novnc
-### ## Use the older version of websockify to prevent hanging connections on offline containers, 
+### 'python3-numpy' used for websockify/novnc (Python 2 'python-numpy' was removed in newer Ubuntu)
+### ## Use the older version of websockify to prevent hanging connections on offline containers,
 ### see https://github.com/ConSol/docker-headless-vnc-container/issues/50
 ### installed into '/usr/share/usr/local/share/noVNCdim'
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y \
-        python-numpy \
+        python3-numpy \
     && mkdir -p "${NO_VNC_HOME}/utils/websockify" \
-    && wget -qO- "https://github.com/novnc/noVNC/archive/v1.3.0.tar.gz" | tar xz --strip 1 -C "${NO_VNC_HOME}" \
-    && wget -qO- "https://github.com/novnc/websockify/archive/v0.11.0.tar.gz" | tar xz --strip 1 -C "${NO_VNC_HOME}/utils/websockify" \
+    && wget -qO- "https://github.com/novnc/noVNC/archive/v1.7.0.tar.gz" | tar xz --strip 1 -C "${NO_VNC_HOME}" \
+    && wget -qO- "https://github.com/novnc/websockify/archive/v0.13.0.tar.gz" | tar xz --strip 1 -C "${NO_VNC_HOME}/utils/websockify" \
     && chmod +x -v "${NO_VNC_HOME}/utils/novnc_proxy" \
     && rm -rf /var/lib/apt/lists/*
 
@@ -151,10 +153,10 @@ RUN apt-get update \
 FROM stage-wrapper as stage-final
 
 LABEL \
-    any.accetto.description="Headless Ubuntu VNC/noVNC container with Xfce desktop" \
-    any.accetto.display-name="Headless Ubuntu/Xfce VNC/noVNC container" \
-    any.accetto.expose-services="6901:http,5901:xvnc" \
-    any.accetto.tags="ubuntu, xfce, vnc, novnc"
+    any.knightar.description="Headless Ubuntu VNC/noVNC container with Xfce desktop" \
+    any.knightar.display-name="Headless Ubuntu/Xfce VNC/noVNC container" \
+    any.knightar.expose-services="6901:http,5901:xvnc" \
+    any.knightar.tags="ubuntu, xfce, vnc, novnc"
 
 ### Arguments can be provided during build
 ARG ARG_HOME

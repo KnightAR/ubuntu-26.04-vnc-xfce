@@ -1,10 +1,20 @@
 # CHANGELOG
 
-## accetto/ubuntu-vnc-xfce-firefox-plus
+## knightar/ubuntu-vnc-xfce-firefox-plus
 
 [Docker Hub][this-docker] - [Git Hub][this-github] - [Wiki][this-wiki]
 
 ***
+
+### Release 26.07
+
+**Revived and upgraded to Ubuntu 26.04**
+
+This image has been revived and rebuilt on the new `Ubuntu 26.04 LTS` base image (see [knightar/ubuntu-vnc-xfce](https://github.com/KnightAR/ubuntu-26.04-vnc-xfce)), picking up the latest customizable `Firefox` version available in the Ubuntu 26.04 repositories. It is now maintained by [KnightAR](https://github.com/KnightAR/ubuntu-26.04-vnc-xfce).
+
+- rebuilt on the `knightar/ubuntu-vnc-xfce` base image (`Ubuntu 26.04 LTS`)
+- installs the current `Firefox` package provided by Ubuntu 26.04
+- the vendor `accetto` has been replaced with `knightar` in the image repositories, names and labels
 
 ### Final release 22.11
 

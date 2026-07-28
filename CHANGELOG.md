@@ -2,11 +2,33 @@
 
 # CHANGELOG
 
-## accetto/ubuntu-vnc-xfce
+## knightar/ubuntu-vnc-xfce
 
 [Docker Hub][this-docker] - [Git Hub][this-github] - [Wiki][this-wiki]
 
 ***
+
+### Release 26.07
+
+**Revived and upgraded to Ubuntu 26.04**
+
+This repository has been revived, forked and upgraded to the `Ubuntu 26.04 LTS` base image. It is now maintained by [KnightAR](https://github.com/KnightAR/ubuntu-26.04-vnc-xfce).
+
+The most significant changes in this release are:
+
+- base image upgraded to **Ubuntu 26.04 LTS**
+- `jq` migrated from the retired `stedolan/jq` project to `jqlang/jq` and updated
+- `TigerVNC`, `noVNC` and `websockify` sources updated to work on the new base image
+- the Python 2 `python-numpy` dependency replaced with `python3-numpy`
+- the vendor `accetto` has been replaced with `knightar` in the image repositories, names and labels
+
+Updated versions:
+
+- Ubuntu **26.04**
+- jq **1.7.1**
+- TigerVNC **1.16.2**
+- noVNC **1.7.0**
+- websockify **0.13.0**
 
 ### Release 23.01
 

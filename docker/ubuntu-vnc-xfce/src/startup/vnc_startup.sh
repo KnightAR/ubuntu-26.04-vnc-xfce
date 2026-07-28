@@ -7,10 +7,10 @@ set -e
 help (){
 echo "
 USAGE:
-docker run <run-options> accetto/<image>:<tag> <option> <optional-command>
+docker run <run-options> knightar/<image>:<tag> <option> <optional-command>
 
 IMAGES:
-accetto/ubuntu-vnc-xfce
+knightar/ubuntu-vnc-xfce
 
 TAGS:
 latest      based on 'latest' Ubuntu
@@ -19,22 +19,22 @@ rolling     based on 'rolling' Ubuntu
 OPTIONS:
 -w, --wait      (default) Keeps the UI and the vnc server up until SIGINT or SIGTERM are received.
                 An optional command can be executed after the vnc starts up.
-                example: docker run -d -P accetto/ubuntu-vnc-xfce
-                example: docker run -it -P --rm accetto/ubuntu-vnc-xfce bash
+                example: docker run -d -P knightar/ubuntu-vnc-xfce
+                example: docker run -it -P --rm knightar/ubuntu-vnc-xfce bash
 
 -s, --skip      Skips the vnc startup and just executes the provided command.
-                example: docker run -it -P --rm accetto/ubuntu-vnc-xfce --skip echo $BASH_VERSION
+                example: docker run -it -P --rm knightar/ubuntu-vnc-xfce --skip echo $BASH_VERSION
 
 -d, --debug     Executes the vnc startup and tails the vnc/noVNC logs.
                 Any parameters after '--debug' are ignored. CTRL-C stops the container.
-                example: docker run -it -P --rm accetto/ubuntu-vnc-xfce --debug
+                example: docker run -it -P --rm knightar/ubuntu-vnc-xfce --debug
 
 -t, --tail-log  same as '--debug'
 
 -h, --help      Prints out this help.
-                example: docker run --rm accetto/ubuntu-vnc-xfce
+                example: docker run --rm knightar/ubuntu-vnc-xfce
 
-Fore more information see: https://github.com/accetto/ubuntu-vnc-xfce
+Fore more information see: https://github.com/KnightAR/ubuntu-26.04-vnc-xfce
 "
 }
 if [[ $1 =~ -h|--help ]]; then

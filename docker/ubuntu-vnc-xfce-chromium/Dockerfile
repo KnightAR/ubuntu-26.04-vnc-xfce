@@ -18,16 +18,31 @@
 
 ARG BASETAG=latest
 
-FROM accetto/ubuntu-vnc-xfce:${BASETAG} as stage-install
+FROM knightar/ubuntu-vnc-xfce:${BASETAG} as stage-install
 
 ### Be sure to use root user
 USER 0
 
 ### 'apt-get clean' runs automatically
-RUN apt-get update \
+RUN echo "**** install packages ****" \
+    && add-apt-repository ppa:xtradeb/apps \
+    && apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y \
-        chromium-browser \
+        chromium \
     && apt-get -y autoremove \
+    && echo "**** xfce tweaks ****" && \
+    sed -i \
+        's#^Exec=.*#Exec=/usr/local/bin/wrapped-chromium#g' \
+        /usr/share/applications/chromium.desktop && \
+    mv \
+        /usr/bin/exo-open \
+        /usr/bin/exo-open-real && \
+    mv \
+        /usr/bin/thunar \
+        /usr/bin/thunar-real && \
+    mv \
+        /usr/bin/chromium \
+        /usr/bin/chromium-browser \
     && rm -rf /var/lib/apt/lists/*
 
 ### Chromium browser requires some presets
@@ -64,12 +79,12 @@ ARG ARG_VNC_BLACKLIST_TIMEOUT
 ARG ARG_VNC_RESOLUTION
 
 LABEL \
-    any.accetto.description="Headless Ubuntu VNC/noVNC container with Xfce desktop and Chromium Browser" \
-    any.accetto.display-name="Headless Ubuntu/Xfce VNC/noVNC container with Firefox and Chromium" \
-    any.accetto.tags="ubuntu, xfce, vnc, novnc, chromium" \
+    any.knightar.description="Headless Ubuntu VNC/noVNC container with Xfce desktop and Chromium Browser" \
+    any.knightar.display-name="Headless Ubuntu/Xfce VNC/noVNC container with Firefox and Chromium" \
+    any.knightar.tags="ubuntu, xfce, vnc, novnc, chromium" \
     version-sticker="${ARG_VERSION_STICKER}" \
     org.label-schema.vcs-ref="${ARG_VCS_REF}" \
-    org.label-schema.vcs-url="https://github.com/accetto/ubuntu-vnc-xfce-chromium"
+    org.label-schema.vcs-url="https://github.com/KnightAR/ubuntu-26.04-vnc-xfce"
 
 ENV \
     REFRESHED_AT=${ARG_REFRESHED_AT} \

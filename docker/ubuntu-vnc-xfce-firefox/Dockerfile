@@ -18,7 +18,7 @@
 
 ARG BASETAG=latest
 
-FROM accetto/ubuntu-vnc-xfce:${BASETAG} as stage-install
+FROM knightar/ubuntu-vnc-xfce:${BASETAG} as stage-install
 
 ### Be sure to use root user
 USER 0
@@ -70,12 +70,12 @@ ARG ARG_VNC_BLACKLIST_TIMEOUT
 ARG ARG_VNC_RESOLUTION
 
 LABEL \
-    any.accetto.description="Headless Ubuntu VNC/noVNC container with Xfce desktop and Firefox" \
-    any.accetto.display-name="Headless Ubuntu/Xfce VNC/noVNC container with Firefox" \
-    any.accetto.tags="ubuntu, xfce, vnc, novnc, firefox" \
+    any.knightar.description="Headless Ubuntu VNC/noVNC container with Xfce desktop and Firefox" \
+    any.knightar.display-name="Headless Ubuntu/Xfce VNC/noVNC container with Firefox" \
+    any.knightar.tags="ubuntu, xfce, vnc, novnc, firefox" \
     version-sticker="${ARG_VERSION_STICKER}" \
     org.label-schema.vcs-ref="${ARG_VCS_REF}" \
-    org.label-schema.vcs-url="https://github.com/accetto/ubuntu-vnc-xfce-firefox"
+    org.label-schema.vcs-url="https://github.com/KnightAR/ubuntu-26.04-vnc-xfce"
 
 ENV \
   REFRESHED_AT=${ARG_REFRESHED_AT} \

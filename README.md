@@ -1,6 +1,6 @@
 # Headless Ubuntu/Xfce container with VNC/noVNC
 
-## accetto/ubuntu-vnc-xfce
+## knightar/ubuntu-vnc-xfce
 
 [Docker Hub][this-docker] - [Git Hub][this-github] - [Changelog][this-changelog] - [Wiki][this-wiki]
 
@@ -18,8 +18,13 @@
 
 ***
 
+> **Revived fork — upgraded to Ubuntu 26.04 LTS.**
+> This repository has been revived and forked by [KnightAR](https://github.com/KnightAR/ubuntu-26.04-vnc-xfce) and upgraded from `Ubuntu 18.04 LTS` to the **Ubuntu 26.04 LTS** base image — primarily to pick up the latest **Chromium** (and **Firefox**) versions available in the Ubuntu 26.04 repositories. The `TigerVNC`, `noVNC`, `websockify` and `jq` components have been updated to work on the new base, and the previous vendor `accetto` has been replaced with `knightar` throughout the image repositories and names. See the [Changelog][this-changelog] for details.
+
+***
+
 - [Headless Ubuntu/Xfce container with VNC/noVNC](#headless-ubuntuxfce-container-with-vncnovnc)
-  - [accetto/ubuntu-vnc-xfce](#accettoubuntu-vnc-xfce)
+  - [knightar/ubuntu-vnc-xfce](#knightarubuntu-vnc-xfce)
     - [Introduction](#introduction)
     - [Image generations](#image-generations)
     - [Project versions](#project-versions)
@@ -37,7 +42,7 @@
 
 ### Introduction
 
-This repository contains resources for building Docker images based on [Ubuntu 18.04 LTS][docker-ubuntu] with [Xfce][xfce] desktop environment and [VNC][tigervnc]/[noVNC][novnc] servers for headless use.
+This repository contains resources for building Docker images based on [Ubuntu 26.04 LTS][docker-ubuntu] with [Xfce][xfce] desktop environment and [VNC][tigervnc]/[noVNC][novnc] servers for headless use.
 
 The images can be successfully built and used on Linux, Windows, Mac and NAS devices. It has been tested with [Docker Desktop][docker-desktop] on [Ubuntu flavours][ubuntu-flavours], [Windows 10][docker-for-windows] and [Container Station][container-station] from [QNAP][qnap].
 
