@@ -112,9 +112,19 @@ chmod 1777 /tmp/.X11-unix 2>/dev/null || true
 
 echo "... VNC params: VNC_COL_DEPTH=${VNC_COL_DEPTH}, VNC_RESOLUTION=${VNC_RESOLUTION}"
 echo "... VNC params: VNC_BLACKLIST_TIMEOUT=${VNC_BLACKLIST_TIMEOUT}, VNC_BLACKLIST_THRESHOLD=${VNC_BLACKLIST_THRESHOLD}"
-vncserver ${DISPLAY} -depth ${VNC_COL_DEPTH} -geometry ${VNC_RESOLUTION} \
+### If 'vncserver' fails to start, dump the logs before exiting.
+### Without this, 'set -e' aborts the script on failure and the tail below
+### (which normally shows the logs) is never reached.
+if ! vncserver ${DISPLAY} -depth ${VNC_COL_DEPTH} -geometry ${VNC_RESOLUTION} \
     -BlacklistTimeout ${VNC_BLACKLIST_TIMEOUT} \
-    -BlacklistThreshold ${VNC_BLACKLIST_THRESHOLD} &> "${STARTUPDIR}"/no_vnc_startup.log
+    -BlacklistThreshold ${VNC_BLACKLIST_THRESHOLD} &> "${STARTUPDIR}"/no_vnc_startup.log ; then
+    echo "ERROR: 'vncserver' failed to start on display ${DISPLAY}. Dumping logs:"
+    echo "----- ${STARTUPDIR}/no_vnc_startup.log -----"
+    cat "${STARTUPDIR}"/no_vnc_startup.log 2>/dev/null
+    echo "----- ${HOME}/.vnc/*${DISPLAY}.log -----"
+    cat "${HOME}"/.vnc/*"${DISPLAY}".log 2>/dev/null
+    exit 1
+fi
 
 ### log connect options
 echo "... VNC server started on display ${DISPLAY}"
