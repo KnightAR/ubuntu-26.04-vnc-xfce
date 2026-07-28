@@ -25,6 +25,9 @@ USER 0
 
 ### 'apt-get clean' runs automatically
 RUN echo "**** install packages ****" \
+    && apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+        software-properties-common \
     && add-apt-repository ppa:xtradeb/apps \
     && apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y \
