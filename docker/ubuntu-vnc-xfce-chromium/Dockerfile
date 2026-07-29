@@ -28,7 +28,7 @@ RUN echo "**** install packages ****" \
     && add-apt-repository ppa:xtradeb/apps \
     && apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y \
-        chromium \
+        chromium thunar \
     && apt-get -y autoremove \
     && echo "**** xfce tweaks ****" && \
     sed -i \
@@ -67,11 +67,6 @@ RUN chmod +x \
     && sync \
     && ./create_user_and_fix_permissions.sh $STARTUPDIR $HOME \
     && rm ./create_user_and_fix_permissions.sh
-
-RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -y \
-        thunar \
-    && rm -rf /var/lib/apt/lists/*
 
 FROM stage-config as stage-final
 
