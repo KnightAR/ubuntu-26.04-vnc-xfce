@@ -123,6 +123,19 @@ ${VNCSERVER} -kill ${DISPLAY} &> "${STARTUPDIR}"/vnc_startup.log \
 mkdir -p /tmp/.X11-unix
 chmod 1777 /tmp/.X11-unix 2>/dev/null || true
 
+### Prevent 'xauth: timeout in locking authority file ~/.Xauthority'.
+### Causes are a stale lock from an unclean shutdown ('.Xauthority-l'/'-c')
+### or a HOME that the current (nss_wrapper) user cannot write. Clear any
+### stale lock and ensure a writable authority file, falling back to /tmp.
+export XAUTHORITY="${XAUTHORITY:-${HOME}/.Xauthority}"
+rm -f "${XAUTHORITY}" "${XAUTHORITY}-c" "${XAUTHORITY}-l"
+if ! touch "${XAUTHORITY}" 2>/dev/null ; then
+    echo "... WARNING: '${HOME}' not writable; using /tmp for XAUTHORITY"
+    export XAUTHORITY="/tmp/.Xauthority-$(id -u)"
+    rm -f "${XAUTHORITY}" "${XAUTHORITY}-c" "${XAUTHORITY}-l"
+    touch "${XAUTHORITY}"
+fi
+
 echo "... VNC params: VNC_COL_DEPTH=${VNC_COL_DEPTH}, VNC_RESOLUTION=${VNC_RESOLUTION}"
 echo "... VNC params: VNC_BLACKLIST_TIMEOUT=${VNC_BLACKLIST_TIMEOUT}, VNC_BLACKLIST_THRESHOLD=${VNC_BLACKLIST_THRESHOLD}"
 ### If 'vncserver' fails to start, dump the logs before exiting.

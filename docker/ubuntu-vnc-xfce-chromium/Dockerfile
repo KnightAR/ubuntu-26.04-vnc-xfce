@@ -45,14 +45,6 @@ RUN echo "**** install packages ****" \
         /usr/bin/chromium-browser \
     && rm -rf /var/lib/apt/lists/*
 
-RUN echo "**** temp install packages ****" \
-    && add-apt-repository universe \
-    && apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -y \
-        libnss-wrapper \
-    && apt-get -y autoremove \
-    && rm -rf /var/lib/apt/lists/*
-
 ### Chromium browser requires some presets
 ### Note that 'no-sandbox' flag is required, but intended for development only
 RUN echo "CHROMIUM_FLAGS='--no-sandbox --disable-gpu --user-data-dir --window-size=${VNC_RESOLUTION%x*},${VNC_RESOLUTION#*x} --window-position=0,0'" > ${HOME}/.chromium-browser.init
@@ -75,6 +67,11 @@ RUN chmod +x \
     && sync \
     && ./create_user_and_fix_permissions.sh $STARTUPDIR $HOME \
     && rm ./create_user_and_fix_permissions.sh
+
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+        thunar \
+    && rm -rf /var/lib/apt/lists/*
 
 FROM stage-config as stage-final
 
