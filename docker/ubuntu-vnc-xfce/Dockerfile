@@ -111,7 +111,7 @@ FROM stage-xfce as stage-vnc
 
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y \
-        tigervnc-standalone-server tigervnc-common \
+        tigervnc-standalone-server tigervnc-common dbus-x11 \
     && rm -rf /var/lib/apt/lists/*
 
 FROM stage-vnc as stage-novnc
