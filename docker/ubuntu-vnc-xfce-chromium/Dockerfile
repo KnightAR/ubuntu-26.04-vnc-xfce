@@ -45,6 +45,9 @@ RUN echo "**** install packages ****" \
         /usr/bin/chromium-browser \
     && rm -rf /var/lib/apt/lists/*
 
+# add local files
+COPY ./root /
+
 ### Chromium browser requires some presets
 ### Note that 'no-sandbox' flag is required, but intended for development only
 RUN echo "CHROMIUM_FLAGS='--no-sandbox --disable-gpu --user-data-dir --window-size=${VNC_RESOLUTION%x*},${VNC_RESOLUTION#*x} --window-position=0,0'" > ${HOME}/.chromium-browser.init
